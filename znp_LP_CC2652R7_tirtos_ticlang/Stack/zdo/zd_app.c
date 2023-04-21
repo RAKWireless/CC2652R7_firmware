@@ -441,12 +441,11 @@ uint32_t ZDApp_event_loop( uint8_t task_id, uint32_t events )
           ZDApp_ChangeState( DEV_ROUTER );
         }
 
-        if ( zgChildAgingEnable == TRUE )
-        {
-          // Once the device has changed its state to a ROUTER set the timer to send
-          // Parent annce
-          ZDApp_SetParentAnnceTimer();
-        }
+        // As we cannot enable child aging as Xiaomi devices will drop off
+        // but we stil want to have the parent announces we always enable it here.
+        // Otherwise some end devices could be unreachable when they changed parent
+        // while the coordinator was powered off.
+        ZDApp_SetParentAnnceTimer();
       }
       else
       {
@@ -907,12 +906,11 @@ void ZDApp_NetworkStartEvt( void )
         bdb_reportCommissioningState(BDB_INITIALIZATION,TRUE);
       }
 
-      if ( zgChildAgingEnable == TRUE )
-      {
-        // Once the device has changed its state to a COORDINATOR set the timer to send
-        // Parent annce
-        ZDApp_SetParentAnnceTimer();
-      }
+      // As we cannot enable child aging as Xiaomi devices will drop off
+      // but we stil want to have the parent announces we always enable it here.
+      // Otherwise some end devices could be unreachable when they changed parent
+      // while the coordinator was powered off.
+      ZDApp_SetParentAnnceTimer();
     }
     else
     {
@@ -3164,6 +3162,14 @@ void ZDO_NetworkStatusCB( uint16_t nwkDstAddr, uint8_t statusCode, uint16_t dstA
   {
     // Routing error for dstAddr, this is informational and a Route
     // Request should happen automatically.
+  }
+
+  if ( (nwkDstAddr == NLME_GetShortAddr())
+        && (statusCode == NWKSTAT_SOURCE_ROUTE_FAILURE) )
+  {
+    // Received a source route failure, remove route and rediscover.
+    RTG_RemoveRtgEntry( dstAddr, 0 );
+    NLME_RouteDiscoveryRequest( dstAddr, 0, 30 );
   }
 }
 

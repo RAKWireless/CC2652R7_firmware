@@ -67,14 +67,14 @@
 /* must be located at the beginning of the application.                      */
 
 #define FLASH_BASE              0x00000000
-#define FLASH_SIZE              0xAA000
-#define FLASH_NV_BASE           0xAA000
-#define FLASH_NV_SIZE           0x4000
-#define FLASH_LAST_BASE         0xAE000
+#define FLASH_SIZE              0x50000
+#define FLASH_NV_BASE           0x50000
+#define FLASH_NV_SIZE           0x6000
+#define FLASH_LAST_BASE         0x56000
 #define FLASH_LAST_SIZE         0x2000
 
 #define RAM_BASE                0x20000000
-#define RAM_SIZE                0x24000
+#define RAM_SIZE                0x14000
 #define GPRAM_BASE              0x11000000
 #define GPRAM_SIZE              0x2000
 

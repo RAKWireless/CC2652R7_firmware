@@ -1685,6 +1685,11 @@ static void MT_ZdoMgmtPermitJoinRequest(uint8_t *pBuf)
   retValue = (uint8_t)ZDP_MgmtPermitJoinReq( &destAddr, duration, tcSignificance, 0);
   ignoreIndication = FALSE;
 
+  // If joining is enabled via a router, ZDO_ProcessMgmtPermitJoinReq is never triggered thus
+  // ZDSecMgrPermitJoining is never called. Joining via a router would always fail now since
+  // ZDSecMgrPermitJoiningEnabled in zd_sec_mgr.c stays FALSE
+  ZDSecMgrPermitJoining(duration);
+
   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_ZDO), cmdId, 1, &retValue);
 }
 

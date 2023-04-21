@@ -131,7 +131,7 @@ uint8_t zgSecurePermitJoin = TRUE;
 // TC Link Key. In this scenario, if this flag is TRUE, the Trust Center will
 // encrypt the outgoing NWK Key with the default TC Link Key (ZigbeeAlliance09).
 // If this flag is FALSE (default), the Trust Center will not send the NWK Key at all.
-uint8_t zgAllowRejoinsWithWellKnownKey = FALSE;
+uint8_t zgAllowRejoinsWithWellKnownKey = TRUE; // https://e2e.ti.com/support/wireless-connectivity/zigbee-and-thread/f/158/p/882650/3265311#3265311
 
 //allowInstallCodes
 uint8_t zgAllowInstallCodes = ZG_IC_SUPPORTED_NOT_REQUIRED;
@@ -225,7 +225,9 @@ uint8_t zgEndDeviceConfiguration = END_DEV_CONFIGURATION;
 //
 // NOTICE:  Before enabling Child Aging make sure to review all the related
 // definitions in this file, especially zgNwkParentInformation.
-uint8_t zgChildAgingEnable = TRUE;
+
+// Disable child aging, otherwise Xiaomi devices are being kicked off the network.
+uint8_t zgChildAgingEnable = FALSE;
 
 //==========    TouchLink NWK configuration    ===============
 // Values used by Router when starts a network as initiator

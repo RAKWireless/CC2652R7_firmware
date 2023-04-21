@@ -433,10 +433,18 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
 #if !defined ( APS_NO_GROUPS )
     // Find the first endpoint for this group
     grpEp = aps_FindGroupForEndpoint( aff->GroupID, APS_GROUPS_FIND_FIRST );
-    if ( grpEp == APS_GROUPS_EP_NOT_FOUND )
-      return;   // No endpoint found
+    if ( grpEp == APS_GROUPS_EP_NOT_FOUND ) {
+      // No endpoint found, default to endpoint 1.
+      // In the original source code there is a return here.
+      // This prevent the messags from being forwarded.
+      // For our use-case we want to capture all messages.
+      // Even if the coordinator is not in the group.
+      epDesc = afFindEndPointDesc( 1 );
+    }
+    else {
+      epDesc = afFindEndPointDesc( grpEp );
+    }
 
-    epDesc = afFindEndPointDesc( grpEp );
     if ( epDesc == NULL )
       return;   // Endpoint descriptor not found
 
@@ -483,7 +491,9 @@ void afIncomingData( aps_FrameFormat_t *aff, zAddrType_t *SrcAddress, uint16_t S
     // if the Wildcard ProfileID is received the message should not be sent to ZDO endpoint
     if ( (aff->ProfileID == epProfileID) ||
          ((epDesc->endPoint == ZDO_EP) && (aff->ProfileID == ZDO_PROFILE_ID)) ||
-         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) )
+         ((epDesc->endPoint != ZDO_EP) && ( aff->ProfileID == ZDO_WILDCARD_PROFILE_ID )) ||
+         // Forward messages to endpoint even with profileID mismatches
+         ((aff->ProfileID >= 0x100) && (aff->ProfileID <= 0xFC01)) )
     {
       // Save original endpoint
       uint8_t endpoint = aff->DstEndPoint;
