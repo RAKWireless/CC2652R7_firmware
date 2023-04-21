@@ -1,2 +1,6 @@
-# CC2652R7_firmware
+# CC2652R7_firmware for Z-Stack_3.x.0 coordinator 20221226
+
+This firmware is specifically made for the CC2652R7 module, which can be found at the link provided: [CC2652R7 data sheet, product information and support | TI.com](https://www.ti.com/product/CC2652R7). We manually port the changes for the CC2652R chip on the patch file to the CC2652R7 **without changing anything**. It should be noted that the official Z-Stack-firmware patch file located at [Z-Stack-firmware/firmware.patch at master · Koenkk/Z-Stack-firmware · GitHub](https://github.com/Koenkk/Z-Stack-firmware/blob/master/coordinator/Z-Stack_3.x.0/firmware.patch) actually patches three different supported devices in the 3.X.0 branch. However, for convenience, we have packed the changes for the CC2652R7 into a single patch.
+
+In addition to the patch file, we have also provided a `.hex` file. If you wish to build the firmware yourself, please refer to the detailed instructions provided by Koenkk at [Z-Stack-firmware/COMPILE.md at master · Koenkk/Z-Stack-firmware · GitHub](https://github.com/Koenkk/Z-Stack-firmware/blob/master/coordinator/Z-Stack_3.x.0/COMPILE.md). The only difference is that you should select `znp_LP_CC2652R7_tirtos_ticlang` in step 3, and then apply the `firmware.cc2652r7.patch` in step 7.
  
